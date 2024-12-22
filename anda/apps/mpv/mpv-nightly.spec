@@ -1,7 +1,7 @@
-%global commit c4b6d0da3865d49c5c3df78902f6c4cc51cbcdbf
+%global commit a283f66ede58e0182ac8cd4c930238144427fa74
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
-%global commit_date 20240505
-%global ver v0.38.0
+%global commit_date 20241129
+%global ver 0.39.0
 
 Name:           mpv-nightly
 Version:        %ver^%commit_date.%shortcommit
@@ -42,6 +42,7 @@ BuildRequires:  pkgconfig(libavutil) >= 57.24.100
 BuildRequires:  pkgconfig(libbluray)
 BuildRequires:  pkgconfig(libcdio)
 BuildRequires:  pkgconfig(libcdio_paranoia)
+BuildRequires:  pkgconfig(libdisplay-info)
 BuildRequires:  pkgconfig(libdrm)
 BuildRequires:  pkgconfig(libjpeg)
 BuildRequires:  pkgconfig(libpipewire-0.3) >= 0.3.19
@@ -182,7 +183,6 @@ sed -e "s|/usr/local/etc|%{_sysconfdir}/mpv|" -i etc/mpv.conf
     -Dvdpau-gl-x11=enabled \
     -Dvdpau=enabled \
     -Dvector=enabled \
-    -Dvulkan-interop=disabled \
     -Dvulkan=enabled \
     -Dwayland=enabled \
     -Dwerror=false \

@@ -1,5 +1,5 @@
 Name:           anki
-Version:        24.04.1
+Version:        24.11
 Release:        1%?dist
 Summary:        Flashcard program for using space repetition learning
 License:        AGPL-3.0-or-later AND GPL-3.0-or-later AND LGPL-3.0-or-later AND MIT AND BSD-3-Clause AND CC-BY-SA-3.0 AND CC-BY-3.0 AND Apache-2.0 AND CC-BY-2.5
@@ -20,14 +20,17 @@ phrases in a foreign language) as easily, quickly and efficiently as possible.
 Anki is based on a theory called spaced repetition.
 
 %prep
+rm -rf *
 git clone https://github.com/ankitects/anki .
 git checkout %{version}
+%patch 0 -p1
 
 # See https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=anki
 
 %build
 export RELEASE=1
 export PYTHONPATH=%_libdir/python3/dist-packages
+cargo update
 mold -run ./tools/build
 
 

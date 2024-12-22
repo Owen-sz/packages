@@ -1,8 +1,8 @@
 %global csrc_commit 561b417c65791cd8356b5f73620914ceff845d10
-%global commit 1ef4d04a1e56f67d85559a7964e9467df06bc2d7
+%global commit 5340005869d513e5c6af06e5d963bcb77abb3fa3
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
-%global ver 2.1.1
-%global commit_date 20240505
+%global ver 2.2.1
+%global commit_date 20241128
 %global debug_package %nil
 
 Name:			nim-nightly
@@ -100,16 +100,18 @@ mold -run bin/nim cc -d:nimCallDepthLimit=10000 -r tools/niminst/niminst --var:v
 
 sh ./install.sh %buildroot/usr/bin
 
-mkdir -p %buildroot/%_bindir %buildroot/%_datadir/bash-completion/completions %buildroot/usr/lib/nim
+mkdir -p %buildroot/%_bindir %buildroot/%_datadir/bash-completion/completions %buildroot/usr/lib/nim %buildroot%_datadir
 install -Dpm755 bin/nim{grep,suggest,pretty} %buildroot/%_bindir
 install -Dpm644 tools/nim.bash-completion %buildroot/%_datadir/bash-completion/completions/nim
 install -Dpm644 dist/nimble/nimble.bash-completion %buildroot/%_datadir/bash-completion/completions/nimble
 install -Dpm644 -t%buildroot/%_mandir/man1 %SOURCE1 %SOURCE2 %SOURCE3 %SOURCE4
+mv %buildroot%_bindir/nim %buildroot%_datadir/
+ln -s %_datadir/nim/bin/nim %buildroot%_bindir/nim
 
 %ifarch x86_64
-mkdir -p %buildroot/%_docdir/%name/html
-cp -a doc/html/*.html %buildroot/%_docdir/%name/html/
-cp tools/dochack/dochack.js %buildroot/%_docdir/%name/
+mkdir -p %buildroot/%_docdir/%name/html || true
+cp -a doc/html/*.html %buildroot/%_docdir/%name/html/ || true
+cp tools/dochack/dochack.js %buildroot/%_docdir/%name/ || true
 %endif
 
 cp -r lib/* %buildroot%_prefix/lib/nim/
@@ -122,6 +124,9 @@ ln -s %_prefix/lib/nim %buildroot%_prefix/lib/nim/lib || true
 rm -rf %buildroot/nim || true
 rm %buildroot%_bindir/*.bat || true
 
+cp -r dist %buildroot%_prefix/lib/nim/
+ln -s %_prefix/lib/nim/dist %buildroot%_datadir/nim/dist
+
 
 %files
 %license copying.txt dist/nimble/license.txt
@@ -129,6 +134,7 @@ rm %buildroot%_bindir/*.bat || true
 %_bindir/nim{,ble}
 %_mandir/man1/nim{,ble}.1*
 %_datadir/bash-completion/completions/nim{,ble}
+%_datadir/nim/
 %_prefix/lib/nim/
 %_sysconfdir/nim/
 
